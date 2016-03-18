@@ -33,4 +33,13 @@ describe('markdown-it-wikilink', function () {
     expect(md.render(s)).to.equal(target);
   });
 
+  it('should add a ../.. to img absolute paths', function() {
+    var md = require('markdown-it')().use(require('../'), {"head": "../..", "tail": ""});
+    var s, target;
+
+    s = '![page](/assets/test.jpg)';
+    target = '<p><img src="../../assets/test.jpg" alt="page"></p>\n';
+    expect(md.render(s)).to.equal(target);
+  });
+
 });
