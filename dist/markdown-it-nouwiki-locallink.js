@@ -2,18 +2,16 @@
 'use strict';
 /*jshint node:true*/
 
-module.exports = function wikilink_plugin(md, scheme) {
-  var oldLinkOpenOverride = md.renderer.rules.link_open;
-  var oldImgOpenOverride = md.renderer.rules.image;
+module.exports = function local_plugin(md, options) {
+  var originalRuleLink = md.renderer.rules.link_open;
+  var originalRuleImage = md.renderer.rules.image;
 
   var head = "";
   var tail = "";
-  if (scheme != undefined) {
-    head = scheme.head;
-    tail = scheme.tail;
+  if (options != undefined) {
+    head = options.head;
+    tail = options.tail;
   }
-
-  //scheme = scheme || 'http://'; // what is this doing here?
 
   md.renderer.rules.link_open = function(tokens, idx, options, env, self) {
     var hrefIndex = tokens[idx].attrIndex('href');
@@ -25,8 +23,8 @@ module.exports = function wikilink_plugin(md, scheme) {
       }
     }
 
-    if (oldLinkOpenOverride) {
-     return oldLinkOpenOverride.apply(self, arguments);
+    if (originalRuleLink) {
+     return originalRuleLink.apply(self, arguments);
     }
     else {
       // There was no previous renderer override. Just call the default.
@@ -44,8 +42,8 @@ module.exports = function wikilink_plugin(md, scheme) {
       }
     }
 
-    if (oldImgOpenOverride) {
-     return oldImgOpenOverride.apply(self, arguments);
+    if (originalRuleImage) {
+     return originalRuleImage.apply(self, arguments);
     }
     else {
       // There was no previous renderer override. Just call the default.
